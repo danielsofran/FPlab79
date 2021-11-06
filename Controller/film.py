@@ -47,7 +47,9 @@ class ServiceFilme:
                 o1 = Film.fromIterable(initial)
                 o2 = Film.fromIterable(final)
                 if not o1 in self.repo: self.msg = f"Imposibil de actualizat filmul {o1.titlu} din lista din cauza faptului ca nu a fost adaugat!"
-                else: self.repo[o1] = o2 #########################################################################################################
+                else:
+                    self.repo[
+                        o1] = o2  ##########################################################################################################
 
     def vizualizare(self): # afiseaza toate filmele din repository
         if len(self.repo) == 0:
