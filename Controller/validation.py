@@ -1,4 +1,4 @@
-class ValidatorFilm: # clasa statica care verifica datele unui film
+class ValidatorFilm:  # clasa statica care verifica datele unui film
     @staticmethod
     def id(id):
         '''
@@ -63,8 +63,10 @@ class ValidatorFilm: # clasa statica care verifica datele unui film
         :raise: ValueError
         '''
         errs = ""
-        try: assert len(it) == 4
-        except: errs += "Date insuficiente!\n"
+        try:
+            assert len(it) == 4
+        except:
+            errs += "Date insuficiente!\n"
         try:
             ValidatorFilm.id(it[0])
         except ValueError as e:
@@ -97,22 +99,31 @@ class ValidatorFilm: # clasa statica care verifica datele unui film
         '''
         errs = ""
 
-        try: ValidatorFilm.id(film.id)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorFilm.id(film.id)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
-        try: ValidatorFilm.titlu(film.titlu)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorFilm.titlu(film.titlu)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
-        try: ValidatorFilm.descriere(film.descriere)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorFilm.descriere(film.descriere)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
-        try: ValidatorFilm.gen(film.gen)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorFilm.gen(film.gen)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
         if errs != "":
             raise ValueError(errs)
 
-class ValidatorClient: # valideaza un client
+
+class ValidatorClient:  # valideaza un client
     @staticmethod
     def id(id):
         '''
@@ -137,10 +148,17 @@ class ValidatorClient: # valideaza un client
             raise ValueError("Numele trebuie sa fie un text!", nume)
         if len(nume) == 0:
             raise ValueError("Numele nu poate fi vid!")
+        hasalpha = False
+        ch = ""
         for c in nume:
-            if c == '-' or c == ' ': continue
-            if not c.isalpha():
-                raise ValueError(f"Numele nu pot contine caractere '{c}'")
+            if c == '-' or c == ' ':
+                if not c in ch: ch += c
+            elif not c.isalpha():
+                raise ValueError(f"Numele nu pot contine caractere '{c}'!")
+            else:
+                hasalpha = True
+        if not hasalpha and len(ch) > 0:
+            raise ValueError(f"Numele nu poate conține numai caractere '{ch}'!")
 
     @staticmethod
     def cnp(cnp):
@@ -152,12 +170,12 @@ class ValidatorClient: # valideaza un client
         if not isinstance(cnp, (int, str)):
             raise ValueError("CNP-ul trebuie sa fie un numar!")
         if isinstance(cnp, int):
-            if 1000000000000>cnp or cnp>9999999999999:
+            if 1000000000000 > cnp or cnp > 9999999999999:
                 raise ValueError("CNP-ul trebuie sa contina exact 13 cifre!")
         else:
             if not cnp.isdecimal():
                 raise ValueError("CNP-ul trebuie sa fie un numar!")
-            if len(cnp)!=13:
+            if len(cnp) != 13:
                 raise ValueError("CNP-ul trebuie sa contina exact 13 cifre!")
 
     @staticmethod
@@ -168,8 +186,10 @@ class ValidatorClient: # valideaza un client
         :raise: ValueError
         '''
         errs = ""
-        try: assert len(it) == 3
-        except: errs += "Date insuficiente!\n"
+        try:
+            assert len(it) == 3
+        except:
+            errs += "Date insuficiente!\n"
         try:
             ValidatorClient.id(it[0])
         except ValueError as e:
