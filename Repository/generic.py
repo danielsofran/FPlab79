@@ -26,19 +26,19 @@ class Repository: # clasa pentru reposity de tipul type
         return item in self.l
 
     def __getitem__(self, item): # indexator de tip get
-        if isinstance(item, self.type):
-            for elem in self.l:
-                if elem == item:
-                    return elem
-        elif isinstance(item, int):
+        if isinstance(item, int):
             return self.l[item]
+        elif isinstance(item, self.type):
+            for i in range(len(self.l)):
+                if self.l[i] == item:
+                    return self.l[i]
 
     def __setitem__(self, key, value): # indexator de tip set
         if isinstance(key, int): self.l[key] = value
         elif isinstance(key, self.type):
-            for elem in self.l:
-                if elem == key:
-                    elem = value
+            for i in range(len(self.l)):
+                if self.l[i] == key:
+                    self.l[i] = value
 
     def __eq__(self, other): # operator de egalitate care nu tine cont de ordinea elementelor
         try:
@@ -57,22 +57,6 @@ class Repository: # clasa pentru reposity de tipul type
         for elem in self:
             s+=str(elem)+"\n"
         return s[:-1]
-
-    def __add__(self, other):
-        '''
-        operator de adaugare +
-        :param other: un alt elemet de tipul tip
-        :return: lista dupa adaugare
-        :raise: TypeError, in caz ca other nu are tipul type
-                DuplicateIdError, in caz ca id-ul a mai fost adaugat odata in lista
-        '''
-        if not isinstance(other, self.type): raise TypeError(
-            f"Imposibil de adaugat elementul de tipul {type(other)} in reposity-ul de tipul {self.type} datorita diferentelor de tip!")
-        #for elem in self:
-        #    if elem.id == other.id:
-        #        raise DuplicateIdError
-        self._l += other
-        return self
 
     def append(self, other):
         '''
@@ -111,13 +95,13 @@ class Repository: # clasa pentru reposity de tipul type
     def pop(self):  # elimina ultimul element
         return self.l.pop()
 
-    def copy(self): # returneaza o copie
+    def copy(self):  # returneaza o copie
         r = Repository(self.type)
         r._l = self.l[:]
         return r
 
-    def sort(self, key=None, reverse=False): # sorteaza lista
+    def sort(self, key=None, reverse=False):  # sorteaza lista
         self.l.sort(key=key, reverse=reverse)
 
-    def where(self, **kwargs): # cauta elemente in lista comform specificatiilor
-        pass                   # todo
+    def where(self, **kwargs):  # cauta elemente in lista comform specificatiilor todo
+        raise NotImplementedError

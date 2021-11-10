@@ -6,8 +6,11 @@ class ValidatorFilm: # clasa statica care verifica datele unui film
         :param id: int
         :raise: ValueError
         '''
-        if not isinstance(id, int): raise ValueError("Id-ul unui film trebuie sa fie un numar!")
-        if(id<0): raise ValueError(f"Id-ul {id} al unui film nu poate fi negativ!", id)
+        try:
+            id = int(id)
+        except:
+            raise ValueError("Id-ul unui client trebuie sa fie un numar!")
+        if (id <= 0): raise ValueError(f"Id-ul {id} al unui film trebuie sa fie pozitiv!", id)
 
     @staticmethod
     def titlu(titlu):
@@ -16,10 +19,14 @@ class ValidatorFilm: # clasa statica care verifica datele unui film
         :param titlu: string
         :raise: ValueError
         '''
+        if not isinstance(titlu, str):
+            raise ValueError("Numele trebuie sa fie un text!", titlu)
         if len(titlu) == 0:
-            raise ValueError("Titlul nu poate fi vid!")
-        if not titlu.isalnum():
-            raise ValueError("Titlul poate contine doar litere si cifre!", titlu)
+            raise ValueError("Numele nu poate fi vid!")
+        for c in titlu:
+            if c == '-' or c == ' ': continue
+            if not c.isalnum():
+                raise ValueError(f"Numele nu pot contine caractere '{c}'")
 
     @staticmethod
     def descriere(text):
@@ -28,7 +35,7 @@ class ValidatorFilm: # clasa statica care verifica datele unui film
         :param text: string
         :raise: ValueError
         '''
-        if text != str(text):
+        if not isinstance(text, str) or text == "":
             raise ValueError("Descrierea trebuie sa fie un text!")
 
     @staticmethod
@@ -113,8 +120,11 @@ class ValidatorClient: # valideaza un client
         :param id: int
         :raise: ValueError
         '''
-        if not isinstance(id, int): raise ValueError("Id-ul unui client trebuie sa fie un numar!")
-        if(id<0): raise ValueError(f"Id-ul {id} al unui client nu poate fi negativ!", id)
+        try:
+            id = int(id)
+        except:
+            raise ValueError("Id-ul unui client trebuie sa fie un numar!")
+        if (id <= 0): raise ValueError(f"Id-ul {id} al unui client trebuie sa fie pozitiv!", id)
 
     @staticmethod
     def nume(nume):
@@ -187,14 +197,28 @@ class ValidatorClient: # valideaza un client
         '''
         errs = ""
 
-        try: ValidatorClient.id(client.id)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorClient.id(client.id)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
-        try: ValidatorClient.nume(client.nume)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorClient.nume(client.nume)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
-        try: ValidatorClient.cnp(client.cnp)
-        except ValueError as e: errs += e.args[0] + "\n"
+        try:
+            ValidatorClient.cnp(client.cnp)
+        except ValueError as e:
+            errs += e.args[0] + "\n"
 
         if errs != "":
             raise ValueError(errs)
+
+
+def isValid(apel):  # verifica daca apelul unei validari arunca exceptii sau nu
+    try:
+        apel
+    except:
+        return False
+    return True

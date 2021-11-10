@@ -28,15 +28,18 @@ class Film: # tipul de date film
     id = property(get_id)                               # proprietate id
     titlu = property(get_titlu, set_titlu)              # proprietate titlu
     descriere = property(get_descriere, set_descriere)  # proprietate descriere
-    gen = property(get_gen, set_gen)                    # proprietate gen
+    gen = property(get_gen, set_gen)  # proprietate gen
 
-    def __eq__(self, other): # operator de egalitate
+    def __eq__(self, other):  # operator de egalitate
         if not isinstance(other, Film): return False
         if self.id == other.id and self.descriere == other.descriere and self.gen == other.gen: return True
         return False
 
-    def __str__(self):
+    def __str__(self):  # conversia la string, returneaza TOATE campurile
         return f"Id: {self.id}\nTitlu: {self.titlu}\nDescriere: {self.descriere}\nGen: {self.gen}"
+
+    def show(self):  # returneaza cel mai semnificativ camp
+        return self.titlu
 
     @classmethod
     def fromStr(cls, str):
@@ -48,8 +51,9 @@ class Film: # tipul de date film
         '''
         try:
             sir = str.split()
-            return cls(sir[0], sir[1], sir[2], sir[3])
-        except: raise IOError("Film introdus incorect!")
+            return cls(int(sir[0]), sir[1], sir[2], sir[3])
+        except:
+            raise IOError("Film introdus incorect!")
 
     @classmethod
     def fromIterable(cls, it):
@@ -59,4 +63,6 @@ class Film: # tipul de date film
         :rtype: Film
         :raise: ValueError
         '''
-        return cls(it[0], it[1], it[2], it[3])
+        id = 0
+        if it[0] != "": id = int(it[0])
+        return cls(id, it[1], it[2], it[3])

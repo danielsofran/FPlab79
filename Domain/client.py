@@ -21,16 +21,19 @@ class Client: # tipul de date client
         self.__cnp = str(cnp)
 
     id = property(get_id)               # proprietate id
-    nume = property(get_nume, set_nume) # proprietate nume
-    cnp = property(get_cnp, set_cnp)    # proprietate cnp
+    nume = property(get_nume, set_nume)  # proprietate nume
+    cnp = property(get_cnp, set_cnp)  # proprietate cnp
 
-    def __eq__(self, other): # operator de egalitate
+    def __eq__(self, other):  # operator de egalitate
         if not isinstance(other, Client): return False
-        if self.id == other.id and self.nume == other.nume and self.cnp == other.cnp: return True
+        if self.id == other.id and self.nume == other.nume and str(self.cnp) == str(other.cnp): return True
         return False
 
-    def __str__(self): # conversia la string
+    def __str__(self):  # conversia la string, returneaza TOATE campurile
         return f"Id: {self.id}\nNume: {self.nume}\nCNP: {self.cnp}"
+
+    def show(self):  # afiseaza cel mai semnificativ camp
+        return self.nume
 
     @classmethod
     def fromStr(cls, str):
@@ -41,8 +44,13 @@ class Client: # tipul de date client
         :raise: IOException, ValueError
         '''
         try:
-            sir = str.split()
-            return cls(sir[0], sir[1], sir[2])
+            i = 0
+            while str[i].isdigit(): i = i + 1
+            id = int(str[:i])
+            j = i
+            while not str[j].isdigit(): j = j + 1
+            cnp = str[j:j + 14]  # primele 13 cifre
+            return cls(id, str[i + 1:j - 1], cnp)
         except:
             raise IOError("Client introdus incorect!")
 
@@ -54,4 +62,6 @@ class Client: # tipul de date client
         :rtype: Client
         :raise: ValueError
         '''
-        return cls(it[0], it[1], it[2])
+        id = 0
+        if it[0] != "": id = int(it[0])
+        return cls(id, it[1], it[2])

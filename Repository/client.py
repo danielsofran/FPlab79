@@ -8,22 +8,38 @@ class RepositoryClient(Repository): # lista de clienti
 
     def where(self, **kwargs): # implementarea functiei de cautare
         fcts = []
+        rez = self.l
         for key, value in kwargs.items():
-            if key=="id": fcts.append(lambda elem: elem.id == value)
-            elif key=="nume": fcts.append(lambda elem: elem.nume == value)
-            elif key=="cnp": fcts.append(lambda elem: elem.cnp == str(value))
-            elif key=="fields": fcts.append(lambda elem: elem == Client.fromIterable(value))
-            elif key=="client": fcts.append(lambda elem: elem == value)
-            elif key=="function": fcts.append(value)
-        def call_all(elem):
+            if key == "id":
+                fcts.append(lambda elem: elem.id == value)
+                rez = list(filter(fcts[-1], rez))
+            elif key == "nume":
+                fcts.append(lambda elem: elem.nume == value)
+                rez = list(filter(fcts[-1], rez))
+            elif key == "cnp":
+                fcts.append(lambda elem: elem.cnp == str(value))
+                rez = list(filter(fcts[-1], rez))
+            elif key == "fields":
+                fcts.append(lambda elem: elem == Client.fromIterable(value))
+                rez = list(filter(fcts[-1], rez))
+            elif key == "client":
+                fcts.append(lambda elem: elem == value)
+                rez = list(filter(fcts[-1], rez))
+            elif key == "function":
+                fcts.append(value)
+                rez = list(filter(fcts[-1], rez))
+        r = RepositoryClient()
+        r.extend(rez)
+        return r
+
+        def call_all(elem):  # apeleaza toate functiile
             for fct in fcts:
                 if not fct(elem):
                     return False
             return True
+
         rez = RepositoryClient()
         for elem in self:
             if call_all(elem):
                 rez.append(elem)
         return rez
-
-

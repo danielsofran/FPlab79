@@ -13,10 +13,10 @@ class Optiune: # optiune a unui meniu
     def __init__(self, comanda="*", nume="Opțiune", functie_rulare=lambda: 0, *params):
         self.nume = nume  # denumirea
         self.colornume = cl.Fore.LIGHTWHITE_EX  # culoare
-        self.comanda = comanda  # scurtatura
-        self.colorcomanda = cl.Fore.LIGHTYELLOW_EX # culoare comanda
+        self.comanda = str(comanda)  # scurtatura
+        self.colorcomanda = cl.Fore.LIGHTYELLOW_EX  # culoare comanda
         self.functie_rulare = functie_rulare  # functia de rulare - se executa cand utilizatorul alege optiunea
-        self.clear_method = 'clear after time'
+        self.clear_method = 'clear after input'
         '''
             no clear - nu se sterge, 
             clear after time - sterge la un interval de timp dupa ce functia de rulare isi incheie executia
@@ -126,7 +126,7 @@ class Meniu:
         time.sleep(self.pause)
         os.system('cls')
 
-    def show_menu(self):
+    def __show_menu(self):
         # afiseaza meniul
         # -titlul
         # -optiunile
@@ -135,7 +135,7 @@ class Meniu:
             print(self.left, optiune, sep="")
         print()
 
-    def interpret_input(self): # interpreteaza optiunile introduse de utilizator
+    def __interpret_input(self):  # interpreteaza optiunile introduse de utilizator
         print(self.left + self.inputmessagecolor + self.inputmessage, self.inputcolor, end='')
         s = input()
         print(cl.Style.RESET_ALL, end='')
@@ -145,36 +145,42 @@ class Meniu:
                 print()
                 return optiune
         else:
-            if self.show_one_time==True:
-                if s == "": pass
-                else: print(self.left, self.errorcolor + self.errormessage + cl.Style.RESET_ALL, sep='')
-            elif self.clear_after_input==False:
-                if s == "": self.interpret_input()
+            if self.show_one_time == True:
+                if s == "":
+                    pass
                 else:
                     print(self.left, self.errorcolor + self.errormessage + cl.Style.RESET_ALL, sep='')
-                    self.interpret_input()
-            elif self.clear_after_input==True:
-                if s == "": pass
-                else: print(self.left, self.errorcolor + self.errormessage + cl.Style.RESET_ALL, sep='')
+            elif self.clear_after_input == False:
+                if s == "":
+                    self.__interpret_input()
+                else:
+                    print(self.left, self.errorcolor + self.errormessage + cl.Style.RESET_ALL, sep='')
+                    self.__interpret_input()
+            elif self.clear_after_input == True:
+                if s == "":
+                    pass
+                else:
+                    print(self.left, self.errorcolor + self.errormessage + cl.Style.RESET_ALL, sep='')
 
     def run(self): # ruleaza meniul
-        self.show_menu()
+        self.__show_menu()
         if self.show_one_time:
-            self.interpret_input()
+            self.__interpret_input()
             return
         while True:
-            opt = self.interpret_input()
+            opt = self.__interpret_input()
             if opt is None:
                 opt = Optiune()
                 if self.clear_after_input:
                     opt.clear_method = "clear after time"
-                else: opt.clear_method = "no clear"
+                else:
+                    opt.clear_method = "no clear"
             if opt.clear_method == "clear after time":
                 time.sleep(self.pause)
                 os.system('cls')
-                self.show_menu()
+                self.__show_menu()
             elif opt.clear_method == "clear after input":
                 print(self.left + cl.Fore.LIGHTBLUE_EX + "Apasati o tasta pentru a continua" + cl.Fore.RESET, end=" ")
                 input()
                 os.system('cls')
-                self.show_menu()
+                self.__show_menu()
