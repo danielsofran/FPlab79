@@ -20,20 +20,26 @@ class Client: # tipul de date client
         #ValidatorClient.cnp(cnp)    # setter cnp
         self.__cnp = str(cnp)
 
-    id = property(get_id)               # proprietate id
+    id = property(get_id)  # proprietate id
     nume = property(get_nume, set_nume)  # proprietate nume
     cnp = property(get_cnp, set_cnp)  # proprietate cnp
 
     def __eq__(self, other):  # operator de egalitate
         if not isinstance(other, Client): return False
-        if self.id == other.id and self.nume == other.nume and str(self.cnp) == str(other.cnp): return True
+        if self.id == other.id: return True
         return False
+
+    def __hash__(self):
+        return hash(self.id) ^ hash(self.nume) ^ hash(self.cnp)
 
     def __str__(self):  # conversia la string, returneaza TOATE campurile
         return f"Id: {self.id}\nNume: {self.nume}\nCNP: {self.cnp}"
 
     def show(self):  # afiseaza cel mai semnificativ camp
         return self.nume
+
+    def save(self, sep='~'):  # salveaza datele clasei intr-un string
+        return f"{self.id}{sep}{self.nume}{sep}{self.cnp}"
 
     @classmethod
     def fromStr(cls, str):

@@ -1,4 +1,4 @@
-from Controller.service import ServiceClienti, ValidatorClient, RepositoryClient, Client
+from Controller.servicefilmeclienti import ServiceClienti, ValidatorClient, RepositoryClient, Client
 
 
 class TestServiceClienti:
@@ -81,6 +81,14 @@ class TestServiceClienti:
         s.cautare(("", "", "342523432"))
         assert s.msg[:3] == "CNP"  # id invalid
 
+    def filtrare(self):
+        s = ServiceClienti()
+        s.adauga((1, "Daniel", "1425783902542"))
+        s.adauga((2, "Dani", "1425362788907"))
+        s.adauga((35, "Paul", "1425783902542"))
+        s.filtrare("Da")
+        assert len(s.msg.split('\n')) == 2 * 3
+
     def __init__(self):
         self.ctor_get_set()
         self.adauga()
@@ -88,6 +96,8 @@ class TestServiceClienti:
         self.modificare()
         self.vizualizare()
         self.cautare()
+        self.filtrare()
 
 
-TestServiceClienti()
+def runall():
+    TestServiceClienti()

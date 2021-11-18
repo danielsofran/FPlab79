@@ -1,4 +1,4 @@
-from Controller.service import ServiceFilme, ValidatorFilm, RepositoryFilm, Film
+from Controller.servicefilmeclienti import ServiceFilme, ValidatorFilm, RepositoryFilm, Film
 
 
 class TestServiceFilme:
@@ -74,6 +74,14 @@ class TestServiceFilme:
         s.cautare(("", "", "", "actiune"))
         assert s.msg == titlu + str(s.repo[0]) + "\n" + str(s.repo[1])
 
+    def filtrare(self):
+        s = ServiceFilme()
+        s.adauga((1, "Arthur", "frumos", "actiune"))
+        s.adauga((2, "MamaMia", "naspa", "actiune"))
+        s.adauga((3, "Ariciul", "pentru copii", "desen"))
+        s.filtrare("Ar")
+        assert len(s.msg.split('\n')) == 2 * 4
+
     def __init__(self):
         self.ctor_get_set()
         self.adauga()
@@ -83,4 +91,5 @@ class TestServiceFilme:
         self.cautare()
 
 
-TestServiceFilme()
+def runall():
+    TestServiceFilme()

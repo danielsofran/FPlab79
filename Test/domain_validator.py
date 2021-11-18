@@ -1,6 +1,7 @@
 from Domain.film import Film
 from Domain.client import Client
-from Controller.validation import ValidatorFilm, ValidatorClient
+from Domain.inchiriere import Inchiriere
+from Controller.validation import ValidatorFilm, ValidatorClient, ValidatorInchiriere
 
 
 class TestFilm:
@@ -82,7 +83,7 @@ class TestFilm:
         assert f.show() == f.titlu
 
     def egal(self):  # testeaza fct de ==, !=
-        id = 1
+        id = 2
         titlu = "MamaMia"
         descriere = "Naspa"
         gen = "Romance"
@@ -182,7 +183,7 @@ class TestClient:
         assert c.show() == c.nume
 
     def egal(self):
-        id = 1
+        id = 2
         nume = "Dan Bogdan"
         cnp = 3557433214739
         c = Client(id, nume, cnp)
@@ -195,7 +196,7 @@ class TestClient:
         nume = "Dan Bogdan-Dumitre"
         cnp = 3557433214739
         c = Client(id, nume, cnp)
-        g = Client.fromIterable((id, nume, cnp))
+        g = Client.fromIterable((1, nume, cnp))
         h = Client.fromStr(f"{id} {nume} {cnp}")
         assert c == g
         assert g == h
@@ -208,9 +209,61 @@ class TestClient:
         self.convertors()
 
 
+class TestInchiriere:
+    def getters(self):
+        id = 1
+        nume = "Dan Bogdan"
+        cnp = 3557433214739
+        c = Client(id, nume, cnp)
+        id = 1
+        titlu = "MamaMia"
+        descriere = "Naspa"
+        gen = "Romance"
+        f = Film(id, titlu, descriere, gen)
+        i = Inchiriere(c, f, inchiriat=True)
+        ValidatorInchiriere.inchiriere(i)
+        assert i.film == f
+        assert i.client == c
+        assert i.inchiriat == True
+
+    def setters(self):
+        id = 1
+        nume = "Dan Bogdan"
+        cnp = 3557433214739
+        c = Client(id, nume, cnp)
+        id = 1
+        titlu = "MamaMia"
+        descriere = "Naspa"
+        gen = "Romance"
+        f = Film(id, titlu, descriere, gen)
+        i = Inchiriere(c, f, inchiriat=True)
+
+        i.film.titlu = "Arthur"
+        assert i.film.titlu == "Arthur"
+        i.inchiriat = False
+        assert i.inchiriat == False
+        ValidatorInchiriere.inchiriere(i)
+
+    def string(self):  # operatiile de conversie intre sir de caractere si clasa
+        id = 1
+        nume = "Dan Bogdan"
+        cnp = 3557433214739
+        c = Client(id, nume, cnp)
+        id = 1
+        titlu = "MamaMia"
+        descriere = "Naspa"
+        gen = "Romance"
+        f = Film(id, titlu, descriere, gen)
+        i = Inchiriere(c, f, inchiriat=True)
+        assert Inchiriere.fromStr(i.save("*"), "*") == i
+
+    def __init__(self):
+        self.getters()
+        self.setters()
+        self.string()
+
+
 def runall():
     TestFilm()
     TestClient()
-
-
-runall()
+    TestInchiriere()

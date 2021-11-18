@@ -32,4 +32,5 @@ class TestRepoFilm:
         self.where()
 
 
-TestRepoFilm()
+def runall():
+    TestRepoFilm()

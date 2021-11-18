@@ -76,6 +76,10 @@ class TestRepo:
             assert False
         except NotImplementedError:
             pass
+        r = r2.where(function=lambda elem: (elem % 2 == 0))
+        r1 = Repository(int)
+        r1.extend([8, 6, 2, 2, 0])
+        assert r == r1
 
     def __init__(self):
         self.ctor_get_set()
@@ -83,4 +87,5 @@ class TestRepo:
         self.str()
 
 
-TestRepo()
+def runall():
+    TestRepo()

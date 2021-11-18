@@ -32,4 +32,5 @@ class TestRepoClient:
         self.where()
 
 
-TestRepoClient()
+def runall():
+    TestRepoClient()

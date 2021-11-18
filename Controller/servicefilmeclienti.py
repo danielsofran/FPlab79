@@ -9,18 +9,11 @@ from Repository.client import RepositoryClient
 from Controller.generalservice import ServiceCRUD
 
 
-def isnonliteral(s):  # determina daca stringul nu contine litere
-    for c in s:
-        if c.isalpha():
-            return False
-        return True
-
-
 class ServiceFilme(ServiceCRUD):
     def __init__(self):  # constructor
         super().__init__(Film, RepositoryFilm, ValidatorFilm, "filmul", "filme")
 
-    def __validateIterable(self, other):
+    def __validateIterable(self, other):  # valideaza un criteriu introdus
         self.msg = ""
         if other[0] == "" and other[1] == "" and other[2] == "" and other[3] == "":
             self.msg = "Nu ati introdus suficiente date!"
@@ -69,17 +62,23 @@ class ServiceFilme(ServiceCRUD):
         if kwargs is not None and len(kwargs) > 0:
             super().sterge(**kwargs)
 
-    def cautare(self, other):
+    def cautare(self, other):  # cauta valorile valide din repo
         kwargs = self.__validateIterable(other)
         if kwargs is not None and len(kwargs) > 0:
             super().cautare(**kwargs)
 
+    def filtrare(self, other):  # fct de filtrare
+        rez = self.repo.where(function=lambda elem: elem.titlu[:len(other)] == other)
+        if len(rez) == 0:
+            self.msg = f"Nn exista astfel de {self.plural} in lista!"
+        else:
+            self.msg = str(rez)
 
 class ServiceClienti(ServiceCRUD):
     def __init__(self):  # constructor
         super().__init__(Client, RepositoryClient, ValidatorClient, "clientul", "clienți")
 
-    def __validateIterable(self, other):
+    def __validateIterable(self, other):  # valideaza un criteriu introdus
         self.msg = ""
         if other[0] == "" and other[1] == "" and other[2] == "":
             self.msg = "Nu ati introdus suficiente date!"
@@ -124,3 +123,10 @@ class ServiceClienti(ServiceCRUD):
         kwargs = self.__validateIterable(other)
         if kwargs is not None and len(kwargs) > 0:
             super().cautare(**kwargs)
+
+    def filtrare(self, other):  # fct de filtrare
+        rez = self.repo.where(function=lambda elem: elem.nume[:len(other)] == other)
+        if len(rez) == 0:
+            self.msg = f"Nn exista astfel de {self.plural} in lista!"
+        else:
+            self.msg = str(rez)

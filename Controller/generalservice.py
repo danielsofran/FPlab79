@@ -1,7 +1,4 @@
-from Repository.generic import Repository
-
-
-class ServiceCRUD:  # clasa generica handler
+class ServiceCRUD:  # clasa generica service
     def __init__(self, type, repo, validator, singular, plural):  # constructor
         self._type = type
         self._repo = repo()
@@ -61,32 +58,19 @@ class ServiceCRUD:  # clasa generica handler
     def __str__(self):
         return self.msg
 
-    def _toObject(func,
-                  n=None):  # transforma parametrii functiilor din iterabili in obiecte, prinzand eventualele exceptii
-        def inner(self, *args):
-            l = []
-            nonlocal n
-            if n is None: n = len(args) - 1
-            for param in args[:n + 1]:
-                try:
-                    self.Validator.iterable(param)
-                except Exception as ex:
-                    self.msg = ex.args[0]
-                    return
-                else:
-                    l.append(self.type.fromIterable(param))
-            func(self, *l)
-
-        return inner
-
     def __showDict(self, **kwargs):  # afiseaza dictionarul de proprietati a obiectului/cautarii/stergerii
         rez = ""
         for key, value in kwargs.items():
             rez += key + " " + str(value) + ", "
         return rez[:-2]
 
-    @_toObject
     def adauga(self, other):  # adauga un iterabil in repository
+        try:
+            self.Validator.iterable(other)
+            other = self.type.fromIterable(other)
+        except Exception as ex:
+            self.msg = ex.args[0]
+            return
         for elem in self.repo:
             if elem.id == other.id:
                 self.msg = f"Id {other.id} duplicat in lista de {self.plural}!"
@@ -94,6 +78,7 @@ class ServiceCRUD:  # clasa generica handler
         else:
             self.repo.append(other)
             self.msg = f"{self.singular[0].upper()}{self.singular[1:]} {other.show()} s-a adaugat cu success!"
+            return other
 
     def sterge(self, **kwargs):  # sterge elementele cu proprietatile date
         if len(kwargs) == 0:
@@ -108,16 +93,29 @@ class ServiceCRUD:  # clasa generica handler
             self.repo.l.remove(elem)
             self.msg += elem.show() + " "
         self.msg += "s-au sters cu succes!"
+        return rez
 
-    @_toObject
     def modificare(self, initial, final):  # inlocuieste iterabilul initial cu cel final
+        try:
+            self.Validator.iterable(initial)
+            initial = self.type.fromIterable(initial)
+        except Exception as ex:
+            self.msg = ex.args[0]
+            return
+        try:
+            self.Validator.iterable(final)
+            final = self.type.fromIterable(final)
+        except Exception as ex:
+            self.msg = ex.args[0]
+            return
         if not initial in self.repo:
             self.msg = f"Imposibil de actualizat {self.singular}ul {initial.show()} din lista din cauza faptului ca nu a fost adaugat!"
-        elif initial == final:
+        elif str(initial) == str(final):
             self.msg = f"Cele doua elemente de tip {self.singular} coincid!"
         else:
             self.msg = f"{self.singular[0].upper()}{self.singular[1:]} {initial.show()} s-a modificat cu success!"
             self.repo[initial] = final
+            return initial, self.repo[final]
 
     def vizualizare(self):  # afiseaza toate filmele din repository
         if len(self.repo) == 0:

@@ -236,9 +236,8 @@ class ValidatorClient:  # valideaza un client
             raise ValueError(errs)
 
 
-def isValid(apel):  # verifica daca apelul unei validari arunca exceptii sau nu
-    try:
-        apel
-    except:
-        return False
-    return True
+class ValidatorInchiriere:
+    @staticmethod
+    def inchiriere(obj):
+        ValidatorFilm.film(obj.film)
+        ValidatorClient.client(obj.client)

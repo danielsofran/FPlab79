@@ -105,3 +105,14 @@ class Repository: # clasa pentru reposity de tipul type
 
     def where(self, **kwargs):  # cauta elemente in lista comform specificatiilor todo
         raise NotImplementedError
+
+    def load(self, filename):  # incarca elementele dintr-un fisier
+        with open(filename) as f:
+            for line in f:
+                self.append(self.type.fromStr(line))
+
+    def save(self, filename):  # salveaza elementele intr-un fisier
+        l = self.l.copy()
+        with open(filename, "w") as f:
+            while len(l) > 0:
+                f.write(l.pop().save())

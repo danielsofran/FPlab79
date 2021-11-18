@@ -8,7 +8,7 @@ class RepositoryClient(Repository): # lista de clienti
 
     def where(self, **kwargs): # implementarea functiei de cautare
         fcts = []
-        rez = self.l
+        rez = self.copy()
         for key, value in kwargs.items():
             if key == "id":
                 fcts.append(lambda elem: elem.id == value)
@@ -31,15 +31,3 @@ class RepositoryClient(Repository): # lista de clienti
         r = RepositoryClient()
         r.extend(rez)
         return r
-
-        def call_all(elem):  # apeleaza toate functiile
-            for fct in fcts:
-                if not fct(elem):
-                    return False
-            return True
-
-        rez = RepositoryClient()
-        for elem in self:
-            if call_all(elem):
-                rez.append(elem)
-        return rez
